@@ -4,38 +4,30 @@ class ZoomPhotosExtension < Spree::Extension
   url "http://github.com/eliotsykes/spree-zoom-photos"
 
   def activate
-    
+
     # Add an extra large (xl) size to use for zooming.
-    Image.attachment_definitions[:attachment][:styles] = 
-      { :mini => '48x48>', :small => '100x100>', :product => '240x240>', 
+    Image.attachment_definitions[:attachment][:styles] =
+      { :mini => '48x48>', :small => '100x100>', :product => '240x240>',
         :large => '600x600>', :xl => '1200x1200>' }
-    
+
     Spree::BaseHelper.class_eval do
-      
       # image_style will typically be one of :mini, :small, :product, :large, :original
       def product_image_path(product, image_style=:original)
         if product.images.empty?
           image_path "noimage/#{image_style.to_s}.jpg"
         else
-          image_path product.images.first.attachment.url(image_style)  
+          image_path product.images.first.attachment.url(image_style)
         end
       end
-      
+
     end
-    
+
     ProductsHelper.class_eval do
       def image_controls
         @image_controls ||= ZoomPhotos::ImageControls.new(@product)
       end
-      
-      # Override this method if you want to set customise the zoom options.
-      # Available options: http://www.magictoolbox.com/magiczoom_integration/
-      def zoom_options
-        "zoom-distance:20px; zoom-width:350px; zoom-height:350px;
-        loading-msg:#{t('zoom_photos.loading')}"
-      end
     end
-    
+
     Product.class_eval do
       def has_image_without_style?(style)
         return true if contains_image_without_style?(images, style)
@@ -46,9 +38,9 @@ class ZoomPhotosExtension < Spree::Extension
         end
         return false
       end
-      
+
       private
-      
+
       def contains_image_without_style?(images, style)
         return false if images.blank?
         images.each do |image|
@@ -58,6 +50,6 @@ class ZoomPhotosExtension < Spree::Extension
         return false
       end
     end
-    
+
   end
 end

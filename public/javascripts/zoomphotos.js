@@ -1,8 +1,10 @@
+var zoom_options = { zoomWidth:350, zoomHeight:250,title:true };
+
 function hasThumbnails() {
-  return $('ul.thumbnails li').length > 0
+  return $('ul.thumbnails li').length > 0;
 }
 function getSelectedImagePath() {
-  return $("#main-image img").attr('src');    
+  return $("#main-image img").attr('src');
 }
 function checkAndUpdateImageViews() {
   selectedImagePath = getSelectedImagePath();
@@ -14,12 +16,15 @@ function checkAndUpdateImageViews() {
   xlImagePath = selectedImagePath.replace('/product/', '/xl/');
   zoomControl = $("#zoomer");
   if (zoomControl.attr('href') != xlImagePath) {
-    MagicZoom.update(document.getElementById("zoomer"), xlImagePath, selectedImagePath, 'show-title: false');
+      zoomControl.attr('href', xlImagePath);
   }
 }
+
 function initImageViews() {
   $("a.enlargeable").fancybox();
+  $(".jqzoom").jqzoom(zoom_options);
 }
+
 $(document).ready(function() {
   initImageViews();
   if (hasThumbnails()) {
